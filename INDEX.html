@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard with Categorized Buttons</title>
+  <style>
+    /* Preloader */
+    #preloader {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #f9f9fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    .loader {
+      border: 6px solid #e0e0e0;
+      border-top: 6px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Page Styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9f9fb;
+      margin: 0;
+      padding: 40px;
+      color: #333;
+    }
+
+    h1, h2, h3 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    h2 {
+      margin-top: 60px;
+      font-size: 1.8rem;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      margin-top: 30px;
+    }
+
+    .group {
+      margin-bottom: 40px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease-out;
+    }
+
+    .group.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .button-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .button-link {
+      text-decoration: none;
+    }
+
+    .button {
+      background-color: #ffffff;
+      color: #2c3e50;
+      border: 1px solid #e0e0e0;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: block;
+      text-align: center;
+    }
+
+    .button:hover {
+      background-color: #eaf1fb;
+      border-color: #d0d8e4;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .button:active {
+      background-color: #dbe8f9;
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="loader"></div>
+  </div>
+
+  <h1>Dashboard with Categorized Buttons</h1>
+  <div id="main-content"></div>
+
+  <script>
+    // Define button data
+    const buttonData = Array.from({ length: 51 }, (_, i) => ({
+      label: `Page ${i + 1}`,
+      url: `https://example.com/page${i + 1}`
+    }));
+
+    // Group structure (total = 51)
+    const groups = [
+      { name: 'Group 1', subgroups: [5, 5, 5, 5] },   // 20
+      { name: 'Group 2', subgroups: [2, 2, 2, 2] },   // 8
+      { name: 'Group 3', count: 7 },
+      { name: 'Group 4', count: 7 },
+      { name: 'Group 5', count: 4 },
+      { name: 'Group 6', count: 5 }
+    ];
+
+    const main = document.getElementById('main-content');
+    let index = 0;
+
+    groups.forEach(group => {
+      const groupDiv = document.createElement('div');
+      groupDiv.className = 'group';
+
+      const groupTitle = document.createElement('h2');
+      groupTitle.textContent = group.name;
+      groupDiv.appendChild(groupTitle);
+
+      if (group.subgroups) {
+        group.subgroups.forEach((count, i) => {
+          const subgroupTitle = document.createElement('h3');
+          subgroupTitle.textContent = `${group.name} - Subgroup ${i + 1}`;
+          groupDiv.appendChild(subgroupTitle);
+
+          const container = document.createElement('div');
+          container.className = 'button-container';
+
+          for (let j = 0; j < count; j++) {
+            if (index >= buttonData.length) break;
+            const { label, url } = buttonData[index++];
+            const link = document.createElement('a');
+            link.className = 'button-link';
+            link.href = url;
+            link.target = '_blank';
+
+            const btn = document.createElement('div');
+            btn.className = 'button';
+            btn.textContent = label;
+
+            link.appendChild(btn);
+            container.appendChild(link);
+          }
+
+          groupDiv.appendChild(container);
+        });
+      } else {
+        const container = document.createElement('div');
+        container.className = 'button-container';
+
+        for (let j = 0; j < group.count; j++) {
+          if (index >= buttonData.length) break;
+          const { label, url } = buttonData[index++];
+          const link = document.createElement('a');
+          link.className = 'button-link';
+          link.href = url;
+          link.target = '_blank';
+
+          const btn = document.createElement('div');
+          btn.className = 'button';
+          btn.textContent = label;
+
+          link.appendChild(btn);
+          container.appendChild(link);
+        }
+
+        groupDiv.appendChild(container);
+      }
+
+      main.appendChild(groupDiv);
+    });
+
+    // Preloader logic
+    window.addEventListener("load", () => {
+      const preloader = document.getElementById("preloader");
+      preloader.style.opacity = '0';
+      setTimeout(() => preloader.style.display = 'none', 500);
+
+      // Start slide-in observer
+      document.querySelectorAll('.group').forEach(group => {
+        observer.observe(group);
+      });
+    });
+
+    // Slide-in animation observer
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('show');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+  </script>
+
+</body>
+</html>
