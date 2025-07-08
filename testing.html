@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>51 Stylish Buttons with Background</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('/test/background.jpg') no-repeat center center;
+      background-size: cover;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(17, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 10px;
+      height: 100%;
+      width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    a {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(33, 150, 243, 0.9); /* semi-transparent blue */
+      color: #fff;
+      text-decoration: none;
+      border-radius: 50px;
+      font-size: 0.9vw;
+      font-weight: 500;
+      transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    }
+
+    a:hover {
+      background: rgba(25, 118, 210, 1);
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 768px) {
+      a {
+        font-size: 2vw;
+        border-radius: 30px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      a {
+        font-size: 3vw;
+        border-radius: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" id="buttonContainer"></div>
+
+  <script>
+    const container = document.getElementById('buttonContainer');
+
+    for (let i = 1; i <= 51; i++) {
+      const a = document.createElement('a');
+      a.href = `page${i}.html`;
+      a.textContent = `Button ${i}`;
+      a.target = "_blank";
+      container.appendChild(a);
+    }
+  </script>
+</body>
+</html>
